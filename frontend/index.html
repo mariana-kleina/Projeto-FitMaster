@@ -3,21 +3,82 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>FitMaster - Cadastro de Alunos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitMaster - Gestão de Academias</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .hidden { display: none; }
+    .active { display: block !important; }
+  </style>
 </head>
-<body>
-  <h1>FitMaster - Cadastro de Alunos</h1>
+<body class="bg-gray-100 text-gray-800">
+  <header class="bg-purple-700 text-white p-4">
+    <h1 class="text-3xl font-bold">FitMaster</h1>
+    <nav class="mt-2">
+      <button onclick="exibirSecao('alunos')" class="mr-4 hover:text-gray-300">Alunos</button>
+      <button onclick="exibirSecao('agendamentos')" class="mr-4 hover:text-gray-300">Agendamentos</button>
+      <button onclick="exibirSecao('planos')" class="mr-4 hover:text-gray-300">Planos</button>
+      <button onclick="exibirSecao('presencas')" class="hover:text-gray-300">Presenças</button>
+    </nav>
+  </header>
 
-  <h2>Cadastrar novo aluno</h2>
-  <form id="form-aluno">
-    <input type="text" id="nome" placeholder="Nome" required>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="text" id="plano" placeholder="Plano" required>
-    <button type="submit">Cadastrar</button>
-  </form>
+  <main class="container mx-auto mt-8 px-4">
+    <section id="alunos" class="active">
+      <h2 class="text-2xl font-semibold mb-4">Cadastro de Alunos</h2>
+      <form id="form-aluno" class="mb-6">
+        <input type="text" id="nome" placeholder="Nome" class="p-2 border mb-2 w-full" required>
+        <input type="email" id="email" placeholder="Email" class="p-2 border mb-2 w-full" required>
+        <input type="text" id="plano" placeholder="Plano" class="p-2 border mb-4 w-full" required>
+        <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded">Cadastrar</button>
+      </form>
+      <h3 class="text-xl font-semibold mb-2">Lista de Alunos</h3>
+      <ul id="lista-alunos" class="bg-white shadow rounded p-4"></ul>
+    </section>
 
-  <h2>Lista de Alunos</h2>
-  <ul id="lista-alunos"></ul>
+    <section id="agendamentos" class="hidden">
+      <h2 class="text-2xl font-semibold mb-4">Agendamentos</h2>
+      <form id="form-agendamento" class="mb-6">
+        <input type="number" id="aluno_id" placeholder="ID do Aluno" class="p-2 border mb-2 w-full" required>
+        <input type="date" id="data" class="p-2 border mb-2 w-full" required>
+        <input type="time" id="hora" class="p-2 border mb-2 w-full" required>
+        <input type="text" id="descricao" placeholder="Descrição" class="p-2 border mb-4 w-full" required>
+        <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded">Cadastrar</button>
+      </form>
+      <ul id="lista-agendamentos" class="bg-white shadow rounded p-4"></ul>
+    </section>
+
+    <section id="planos" class="hidden">
+      <h2 class="text-2xl font-semibold mb-4">Planos Promocionais</h2>
+      <form id="form-plano" class="mb-6">
+        <input type="text" id="nome_plano" placeholder="Nome do Plano" class="p-2 border mb-2 w-full" required>
+        <input type="text" id="descricao_plano" placeholder="Descrição" class="p-2 border mb-2 w-full" required>
+        <input type="number" id="preco" placeholder="Preço" class="p-2 border mb-4 w-full" required>
+        <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded">Cadastrar</button>
+      </form>
+      <ul id="lista-planos" class="bg-white shadow rounded p-4"></ul>
+    </section>
+
+    <section id="presencas" class="hidden">
+      <h2 class="text-2xl font-semibold mb-4">Presenças</h2>
+      <form id="form-presenca" class="mb-6">
+        <input type="number" id="aluno_id_presenca" placeholder="ID do Aluno" class="p-2 border mb-2 w-full" required>
+        <input type="number" id="aula_id" placeholder="ID da Aula" class="p-2 border mb-2 w-full" required>
+        <input type="date" id="data_presenca" class="p-2 border mb-4 w-full" required>
+        <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded">Registrar Presença</button>
+      </form>
+      <ul id="lista-presencas" class="bg-white shadow rounded p-4"></ul>
+    </section>
+  </main>
+
+  <script>
+    function exibirSecao(secao) {
+      const secoes = document.querySelectorAll('section');
+      secoes.forEach(s => s.classList.remove('active'));
+      secoes.forEach(s => s.classList.add('hidden'));
+      document.getElementById(secao).classList.add('active');
+      document.getElementById(secao).classList.remove('hidden');
+    }
+  </script>
 
   <script src="script.js"></script>
 </body>

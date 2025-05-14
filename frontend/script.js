@@ -1,4 +1,7 @@
 
+// script.js - Funções para Alunos, Agendamentos, Planos e Presenças
+
+// Funções para Alunos
 async function carregarAlunos() {
   try {
     const resposta = await fetch('http://localhost:3000/alunos');
@@ -28,55 +31,83 @@ async function carregarAlunos() {
   }
 }
 
-document.getElementById('form-aluno').addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const nome = document.getElementById('nome').value;
-  const email = document.getElementById('email').value;
-  const plano = document.getElementById('plano').value;
-
+// Funções para Agendamentos
+async function carregarAgendamentos() {
   try {
-    await fetch('http://localhost:3000/alunos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome, email, plano })
+    const resposta = await fetch('http://localhost:3000/agendamentos');
+    const agendamentos = await resposta.json();
+
+    const lista = document.getElementById('lista-agendamentos');
+    lista.innerHTML = '';
+
+    agendamentos.forEach(agendamento => {
+      const item = document.createElement('li');
+      item.textContent = `Aluno ID: ${agendamento.aluno_id} - Data: ${agendamento.data} - Hora: ${agendamento.hora} - Descrição: ${agendamento.descricao}`;
+
+      const botaoExcluir = document.createElement('button');
+      botaoExcluir.textContent = 'Excluir';
+      botaoExcluir.onclick = () => excluirAgendamento(agendamento.id);
+
+      item.appendChild(botaoExcluir);
+      lista.appendChild(item);
     });
-
-    document.getElementById('form-aluno').reset();
-    carregarAlunos();
   } catch (erro) {
-    console.error('Erro ao cadastrar aluno:', erro);
-  }
-});
-
-async function excluirAluno(id) {
-  if (confirm('Tem certeza que deseja excluir este aluno?')) {
-    try {
-      await fetch(`http://localhost:3000/alunos/${id}`, { method: 'DELETE' });
-      carregarAlunos();
-    } catch (erro) {
-      console.error('Erro ao excluir aluno:', erro);
-    }
+    console.error('Erro ao carregar agendamentos:', erro);
   }
 }
 
-async function editarAluno(aluno) {
-  const nome = prompt('Novo nome:', aluno.nome);
-  const email = prompt('Novo email:', aluno.email);
-  const plano = prompt('Novo plano:', aluno.plano);
+// Funções para Planos Promocionais
+async function carregarPlanos() {
+  try {
+    const resposta = await fetch('http://localhost:3000/planos');
+    const planos = await resposta.json();
 
-  if (nome && email && plano) {
-    try {
-      await fetch(`http://localhost:3000/alunos/${aluno.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, plano })
-      });
-      carregarAlunos();
-    } catch (erro) {
-      console.error('Erro ao editar aluno:', erro);
-    }
+    const lista = document.getElementById('lista-planos');
+    lista.innerHTML = '';
+
+    planos.forEach(plano => {
+      const item = document.createElement('li');
+      item.textContent = `${plano.nome} - ${plano.descricao} - R$ ${plano.preco}`;
+
+      const botaoExcluir = document.createElement('button');
+      botaoExcluir.textContent = 'Excluir';
+      botaoExcluir.onclick = () => excluirPlano(plano.id);
+
+      item.appendChild(botaoExcluir);
+      lista.appendChild(item);
+    });
+  } catch (erro) {
+    console.error('Erro ao carregar planos:', erro);
   }
 }
 
+// Funções para Presenças
+async function carregarPresencas() {
+  try {
+    const resposta = await fetch('http://localhost:3000/presencas');
+    const presencas = await resposta.json();
+
+    const lista = document.getElementById('lista-presencas');
+    lista.innerHTML = '';
+
+    presencas.forEach(presenca => {
+      const item = document.createElement('li');
+      item.textContent = `Aluno ID: ${presenca.aluno_id} - Aula ID: ${presenca.aula_id} - Data: ${presenca.data}`;
+
+      const botaoExcluir = document.createElement('button');
+      botaoExcluir.textContent = 'Excluir';
+      botaoExcluir.onclick = () => excluirPresenca(presenca.id);
+
+      item.appendChild(botaoExcluir);
+      lista.appendChild(item);
+    });
+  } catch (erro) {
+    console.error('Erro ao carregar presenças:', erro);
+  }
+}
+
+// Carregar todos os dados ao carregar a página
 carregarAlunos();
+carregarAgendamentos();
+carregarPlanos();
+carregarPresencas();
