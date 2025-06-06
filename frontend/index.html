@@ -38,13 +38,9 @@
         <section id="agendamentos" class="hidden">
             <h2 class="text-2xl font-semibold mb-4">Agendamentos</h2>
             <form id="form-agendamento" class="mb-6">
-                <input type="number" id="aluno_id" placeholder="ID do Aluno" class="p-2 border mb-2 w-full" required>
-                <input type="date" id="data" class="p-2 border mb-2 w-full" required>
-                <input type="time" id="hora" class="p-2 border mb-2 w-full" required>
-                <input type="text" id="atividade" placeholder="Atividade" class="p-2 border mb-4 w-full" required>
-                <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded">Cadastrar</button>
+                <input type="hidden" id="agendamento-id"> <label for="aluno_id_agendamento">Aluno:</label> <select id="aluno_id_agendamento" class="p-2 border mb-2 w-full" required></select> <label for="data_agendamento">Data:</label> <input type="date" id="data_agendamento" class="p-2 border mb-2 w-full" required> <label for="hora_agendamento">Hora:</label> <input type="time" id="hora_agendamento" class="p-2 border mb-2 w-full" required> <label for="atividade_agendamento">Atividade:</label> <input type="text" id="atividade_agendamento" placeholder="Atividade" class="p-2 border mb-4 w-full" required> <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded">Cadastrar</button>
             </form>
-            <ul id="lista-agendamentos" class="bg-white shadow rounded p-4"></ul>
+            <h3 class="text-xl font-semibold mb-2">Lista de Agendamentos</h3> <ul id="lista-agendamentos" class="bg-white shadow rounded p-4"></ul>
         </section>
 
         <section id="planos" class="hidden">
@@ -63,11 +59,10 @@
         <section id="presencas" class="hidden">
             <h2 class="text-2xl font-semibold mb-4">Presenças</h2>
             <form id="form-presenca" class="mb-6">
-                <input type="number" id="aluno_id_presenca" placeholder="ID do Aluno" class="p-2 border mb-2 w-full" required>
-                <input type="date" id="data_presenca" class="p-2 border mb-4 w-full" required>
+                <label for="aluno_id_presenca">Aluno:</label> <select id="aluno_id_presenca" class="p-2 border mb-2 w-full" required></select> <label for="data_presenca">Data da Presença:</label> <input type="date" id="data_presenca" class="p-2 border mb-4 w-full" required>
                 <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded">Registrar Presença</button>
             </form>
-            <ul id="lista-presencas" class="bg-white shadow rounded p-4"></ul>
+            <h3 class="text-xl font-semibold mb-2">Lista de Presenças</h3> <ul id="lista-presencas" class="bg-white shadow rounded p-4"></ul>
         </section>
     </main>
 

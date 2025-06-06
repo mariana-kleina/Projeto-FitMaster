@@ -1,13 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Carrega os planos para o select de alunos ao iniciar
     carregarPlanosParaSelect();
-    // Carrega as listas iniciais
     carregarAlunos();
     carregarAgendamentos();
-    carregarPlanosLista(); // Garante que a lista de planos seja carregada
+    carregarPlanosLista(); 
     carregarPresencas();
 
-    // Event Listener para o formulário de Alunos
     document.getElementById('form-aluno').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('aluno-id').value;
@@ -36,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarPlanosParaSelect();
     });
 
-    // Event Listener para o formulário de Agendamentos
     document.getElementById('form-agendamento').addEventListener('submit', async (e) => {
         e.preventDefault();
         const aluno_id = document.getElementById('aluno_id').value;
@@ -44,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const hora = document.getElementById('hora').value;
         const atividade = document.getElementById('atividade').value;
 
-        // Monta a string data_hora no formato DATETIME do MySQL (Ex: 2025-06-06 10:00:00)
         const data_hora = `${data} ${hora}:00`; 
 
         const response = await fetch('http://localhost:3001/agendamentos', {
@@ -63,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarAgendamentos();
     });
 
-    // Event Listener para o formulário de Planos
     document.getElementById('form-plano').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('plano-id').value;
@@ -92,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarPlanosParaSelect();
     });
 
-    // Event Listener para o formulário de Presenças
     document.getElementById('form-presenca').addEventListener('submit', async (e) => {
         e.preventDefault();
         const aluno_id = document.getElementById('aluno_id_presenca').value;
@@ -115,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Funções para carregar dados e renderizar no HTML
 
 async function carregarPlanosParaSelect() {
     try {
@@ -134,11 +126,9 @@ async function carregarPlanosParaSelect() {
         });
     } catch (error) {
         console.error('Erro ao carregar planos para o select:', error);
-        // Opcional: exibir mensagem de erro na UI ou desabilitar o select
     }
 }
 
-// FUNÇÃO AJUSTADA: Mostrar ID do aluno (mantido)
 async function carregarAlunos() {
     const res = await fetch('http://localhost:3001/alunos');
     const alunos = await res.json();
@@ -164,7 +154,6 @@ async function carregarAlunos() {
     });
 }
 
-// FUNÇÃO AJUSTADA: Agendamentos - mostrar apenas aluno_id e nome do aluno (removido ID do agendamento)
 async function carregarAgendamentos() {
     try {
         const res = await fetch('http://localhost:3001/agendamentos');
@@ -183,8 +172,7 @@ async function carregarAgendamentos() {
         agendamentos.forEach(agendamento => {
             const li = document.createElement('li');
             li.className = 'border-b p-2 flex justify-between items-center';
-            // Formata data_hora para exibição
-            const dataHoraFormatada = new Date(agendamento.data_hora).toLocaleString('pt-BR', {
+                const dataHoraFormatada = new Date(agendamento.data_hora).toLocaleString('pt-BR', {
                 year: 'numeric', month: 'numeric', day: 'numeric',
                 hour: '2-digit', minute: '2-digit'
             });
@@ -201,7 +189,6 @@ async function carregarAgendamentos() {
     }
 }
 
-// FUNÇÃO AJUSTADA: Listar planos (removido ID do plano)
 async function carregarPlanosLista() {
     try {
         const res = await fetch('http://localhost:3001/planos');
@@ -236,7 +223,7 @@ async function carregarPlanosLista() {
     }
 }
 
-// FUNÇÃO AJUSTADA: Presenças (removido ID da presença, mantido aluno_id)
+
 async function carregarPresencas() {
     const res = await fetch('http://localhost:3001/presencas');
     const presencas = await res.json();
@@ -261,7 +248,6 @@ async function carregarPresencas() {
     });
 }
 
-// Funções de Ação (Editar/Excluir Alunos)
 function editarAluno(id, nome, email, plano_id) {
     document.getElementById('aluno-id').value = id;
     document.getElementById('nome').value = nome;
@@ -282,7 +268,6 @@ async function excluirAluno(id) {
     }
 }
 
-// FUNÇÕES PARA PLANOS
 function editarPlano(id, nome, preco, duracao_meses) {
     document.getElementById('plano-id').value = id;
     document.getElementById('nome_plano').value = nome;
@@ -299,13 +284,12 @@ async function excluirPlano(id) {
         } else {
             alert('Erro: ' + (data.erro || 'Ocorreu um erro desconhecido.'));
         }
-        carregarPlanosLista(); // Recarrega a lista de planos
-        carregarPlanosParaSelect(); // Recarrega o select de planos para alunos
-        carregarAlunos(); // Atualiza a lista de alunos caso algum plano tenha sido removido
+        carregarPlanosLista(); 
+        carregarPlanosParaSelect(); 
+        carregarAlunos();
     }
 }
 
-// Função para exibir/ocultar seções
 function exibirSecao(secao) {
     document.querySelectorAll('section').forEach(s => {
         s.classList.remove('active');
@@ -314,7 +298,6 @@ function exibirSecao(secao) {
     document.getElementById(secao).classList.add('active');
     document.getElementById(secao).classList.remove('hidden');
 
-    // Chamar a função de carregamento correspondente ao exibir a seção
     if (secao === 'alunos') {
         carregarAlunos();
         carregarPlanosParaSelect();

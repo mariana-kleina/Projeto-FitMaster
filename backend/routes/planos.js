@@ -24,15 +24,14 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /planos/:id - Atualiza um plano existente
-router.put('/:id', async (req, res) => {
-  const { nome, descricao, preco } = req.body;
+router.put('/:id', (req, res) => {
   const { id } = req.params;
-  try {
-    await db.query('UPDATE planos SET nome = ?, descricao = ?, preco = ? WHERE id = ?', [nome, descricao, preco, id]);
-    res.json({ mensagem: 'Plano atualizado com sucesso!' });
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro ao atualizar plano' });
-  }
+  const { nome, preco, duracao_meses } = req.body; 
+  const sql = 'UPDATE planos SET nome = ?, preco = ?, duracao_meses = ? WHERE id = ?'; 
+  db.query(sql, [nome, preco, duracao_meses, id], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ mensagem: 'Plano atualizado com sucesso!' }); 
+  });
 });
 
 // DELETE /planos/:id - Exclui um plano

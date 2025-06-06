@@ -45,7 +45,8 @@ router.delete('/:id', async (req, res) => {
     await db.query('DELETE FROM alunos WHERE id = ?', [req.params.id]);
     res.json({ mensagem: 'Aluno excluído com sucesso!' });
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao excluir aluno' });
+    console.error('Erro ao excluir aluno:', err); 
+    res.status(500).json({ erro: 'Erro ao excluir aluno', detalhes: err.message }); 
   }
 });
 
