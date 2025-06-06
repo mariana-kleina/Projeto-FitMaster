@@ -2,41 +2,47 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-
-router.get('/', (req, res) => {
-db.query('SELECT * FROM agendamentos', (err, results) => {
-if (err) return res.status(500).json(err);
-res.json(results);
-});
-});
-
-
-router.post('/', (req, res) => {
-const { aluno_id, data, hora, descricao } = req.body;
-const sql = 'INSERT INTO agendamentos (aluno_id, data, hora, descricao) VALUES (?, ?, ?, ?)';
-db.query(sql, [aluno_id, data, hora, descricao], (err, result) => {
-if (err) return res.status(500).json(err);
-res.status(201).json({ id: result.insertId, aluno_id, data, hora, descricao });
-});
+// GET /agendamentos - Lista todos os agendamentos
+router.get('/', async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM agendamentos');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao buscar agendamentos' });
+  }
 });
 
-
-router.put('/:id', (req, res) => {
-const { id } = req.params;
-const { aluno_id, data, hora, descricao } = req.body;
-const sql = 'UPDATE agendamentos SET aluno_id = ?, data = ?, hora = ?, descricao = ? WHERE id = ?';
-db.query(sql, [aluno_id, data, hora, descricao, id], (err) => {
-if (err) return res.status(500).json(err);
-res.send('Agendamento atualizado com sucesso');
+// POST /agendamentos - Cadastra novo agendamento
+router.post('/', async (req, res) => {
+  const { aluno_id, data, horario } = req.body;
+  try {
+    await db.query('INSERT INTO agendamentos (aluno_id, data, horario) VALUES (?, ?, ?)', [aluno_id, data, horario]);
+    res.status(201).json({ mensagem: 'Agendamento cadastrado com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao cadastrar agendamento' });
+  }
 });
+
+// PUT /agendamentos/:id - Atualiza um agendamento existente
+router.put('/:id', async (req, res) => {
+  const { aluno_id, data, horario } = req.body;
+  const { id } = req.params;
+  try {
+    await db.query('UPDATE agendamentos SET aluno_id = ?, data = ?, horario = ? WHERE id = ?', [aluno_id, data, horario, id]);
+    res.json({ mensagem: 'Agendamento atualizado com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao atualizar agendamento' });
+  }
 });
 
-
-router.delete('/:id', (req, res) => {
-db.query('DELETE FROM agendamentos WHERE id = ?', [req.params.id], (err) => {
-if (err) return res.status(500).json(err);
-res.send('Agendamento excluído com sucesso');
-});
+// DELETE /agendamentos/:id - Exclui um agendamento
+router.delete('/:id', async (req, res) => {
+  try {
+    await db.query('DELETE FROM agendamentos WHERE id = ?', [req.params.id]);
+    res.json({ mensagem: 'Agendamento excluído com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao excluir agendamento' });
+  }
 });
 
 module.exports = router;

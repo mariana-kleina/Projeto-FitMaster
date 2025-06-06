@@ -2,41 +2,47 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-
-router.get('/', (req, res) => {
-db.query('SELECT * FROM planos', (err, results) => {
-if (err) return res.status(500).json(err);
-res.json(results);
-});
-});
-
-
-router.post('/', (req, res) => {
-const { nome, descricao, preco } = req.body;
-const sql = 'INSERT INTO planos (nome, descricao, preco) VALUES (?, ?, ?)';
-db.query(sql, [nome, descricao, preco], (err, result) => {
-if (err) return res.status(500).json(err);
-res.status(201).json({ id: result.insertId, nome, descricao, preco });
-});
+// GET /planos - Lista todos os planos
+router.get('/', async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM planos');
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao buscar planos' });
+  }
 });
 
-
-router.put('/:id', (req, res) => {
-const { id } = req.params;
-const { nome, descricao, preco } = req.body;
-const sql = 'UPDATE planos SET nome = ?, descricao = ?, preco = ? WHERE id = ?';
-db.query(sql, [nome, descricao, preco, id], (err) => {
-if (err) return res.status(500).json(err);
-res.send('Plano atualizado com sucesso');
+// POST /planos - Cadastra novo plano
+router.post('/', async (req, res) => {
+  const { nome, descricao, preco } = req.body;
+  try {
+    await db.query('INSERT INTO planos (nome, descricao, preco) VALUES (?, ?, ?)', [nome, descricao, preco]);
+    res.status(201).json({ mensagem: 'Plano cadastrado com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao cadastrar plano' });
+  }
 });
+
+// PUT /planos/:id - Atualiza um plano existente
+router.put('/:id', async (req, res) => {
+  const { nome, descricao, preco } = req.body;
+  const { id } = req.params;
+  try {
+    await db.query('UPDATE planos SET nome = ?, descricao = ?, preco = ? WHERE id = ?', [nome, descricao, preco, id]);
+    res.json({ mensagem: 'Plano atualizado com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao atualizar plano' });
+  }
 });
 
-
-router.delete('/:id', (req, res) => {
-db.query('DELETE FROM planos WHERE id = ?', [req.params.id], (err) => {
-if (err) return res.status(500).json(err);
-res.send('Plano excluído com sucesso');
-});
+// DELETE /planos/:id - Exclui um plano
+router.delete('/:id', async (req, res) => {
+  try {
+    await db.query('DELETE FROM planos WHERE id = ?', [req.params.id]);
+    res.json({ mensagem: 'Plano excluído com sucesso!' });
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao excluir plano' });
+  }
 });
 
 module.exports = router;
