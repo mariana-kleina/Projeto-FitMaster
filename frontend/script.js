@@ -36,10 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('form-agendamento').addEventListener('submit', async (e) => {
         e.preventDefault();
         const aluno_id = document.getElementById('aluno_id').value;
-        const data = document.getElementById('data').value;
-        const hora = document.getElementById('hora').value;
-        const atividade = document.getElementById('atividade').value;
-
+        const data = document.getElementById('data_agendamento').value; 
+        const hora = document.getElementById('hora_agendamento').value; 
+        const atividade = document.getElementById('atividade_agendamento').value; 
         const data_hora = `${data} ${hora}:00`; 
 
         const response = await fetch('http://localhost:3001/agendamentos', {
